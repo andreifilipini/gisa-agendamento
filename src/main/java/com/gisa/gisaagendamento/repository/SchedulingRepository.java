@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
 
-    List<Scheduling> findByAssociateLogin(String login);
+    List<Scheduling> findByAssociateId(String associateId);
 
-    Scheduling findByAssociateLoginAndResourceIdAndDateAndTime(String associateId, String resourceId, String date, String time);
+    Scheduling findByAssociateIdAndResourceIdAndDateAndTime(String associateId, String resourceId, String date, String time);
 }

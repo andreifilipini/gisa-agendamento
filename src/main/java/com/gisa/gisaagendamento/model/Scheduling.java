@@ -3,10 +3,7 @@ package com.gisa.gisaagendamento.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -19,7 +16,7 @@ public class Scheduling {
 	private Long id;
 
 	@NotNull
-	private String associateLogin;
+	private String associateId;
 
 	@NotNull
 	private String resourceId;
@@ -31,11 +28,12 @@ public class Scheduling {
 	private String time;
 
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	private SchedulingStatus status;
 
-	public Scheduling(String associateLogin, String resourceId, String date, String time) {
+	public Scheduling(String associateId, String resourceId, String date, String time) {
 		super();
-		this.associateLogin = associateLogin;
+		this.associateId = associateId;
 		this.resourceId = resourceId;
 		this.date = date;
 		this.time = time;

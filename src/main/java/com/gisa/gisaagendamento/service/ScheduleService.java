@@ -27,14 +27,14 @@ public class ScheduleService {
 	@Inject
 	private CancelSchedulingProducer cancelSchedulingProducer;
 
-	public List<Scheduling> findScheduling(String login) {
-		return isBlank(login)
+	public List<Scheduling> findScheduling(String associateId) {
+		return isBlank(associateId)
 				? Collections.emptyList()
-				: repository.findByAssociateLogin(login);
+				: repository.findByAssociateId(associateId);
 	}
 
-	public Scheduling schedule(String login, String resourceId, String date, String time) {
-		Scheduling scheduling = new Scheduling(login, resourceId, date, time);
+	public Scheduling schedule(String associateId, String resourceId, String date, String time) {
+		Scheduling scheduling = new Scheduling(associateId, resourceId, date, time);
 
 		repository.save(scheduling);
 
@@ -43,8 +43,8 @@ public class ScheduleService {
 		return scheduling;
 	}
 
-	public void cancelSchedule(String login, String resourceId, String date, String time) {
-		Scheduling scheduling = findByAssociateLoginAndResourceIdAndDateAndTime(login, resourceId, date, time);
+	public void cancelSchedule(String associateId, String resourceId, String date, String time) {
+		Scheduling scheduling = findByAssociateIdAndResourceIdAndDateAndTime(associateId, resourceId, date, time);
 
 		if (scheduling == null) {
 			throw new InfraException("A agenda não foi encontrada.");
@@ -57,9 +57,9 @@ public class ScheduleService {
 		cancelSchedulingProducer.send(scheduling.getId(), scheduling.getResourceId(), scheduling.getDate(), scheduling.getTime());
 	}
 
-	private Scheduling findByAssociateLoginAndResourceIdAndDateAndTime(String login, String resourceId, String date, String time) {
-		return isNotBlank(resourceId) && isNotBlank(login) && isNotBlank(date) && isNotBlank(time)
-				? repository.findByAssociateLoginAndResourceIdAndDateAndTime(login, resourceId, date, time)
+	private Scheduling findByAssociateIdAndResourceIdAndDateAndTime(String associateId, String resourceId, String date, String time) {
+		return isNotBlank(resourceId) && isNotBlank(associateId) && isNotBlank(date) && isNotBlank(time)
+				? repository.findByAssociateIdAndResourceIdAndDateAndTime(associateId, resourceId, date, time)
 				: null;
 	}
 

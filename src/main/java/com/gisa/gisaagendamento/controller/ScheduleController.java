@@ -39,7 +39,7 @@ public class ScheduleController {
     public ResponseEntity<List<SchedulingDTO>> findAll(@RequestHeader("Authorization") String authorization) {
         try {
             return ResponseEntity.ok(
-                    scheduleService.findScheduling(getLogin(authorization)).stream()
+                    scheduleService.findScheduling(getId(authorization)).stream()
                             .map(this::toDTO)
                             .collect(Collectors.toList()));
         } catch (InfraException e) {
@@ -51,7 +51,7 @@ public class ScheduleController {
     public ResponseEntity<SchedulingDTO> schedule(@RequestHeader("Authorization") String authorization, @RequestParam("resourceId") String resourceId,
                                                   @RequestParam("date") String date, @RequestParam("time") String time) {
         try {
-            Scheduling scheduling = scheduleService.schedule(getLogin(authorization), resourceId, date, time);
+            Scheduling scheduling = scheduleService.schedule(getId(authorization), resourceId, date, time);
             return ResponseEntity.ok(toDTO(scheduling));
         } catch (InfraException ie) {
             return ResponseEntity.badRequest().build();
@@ -62,19 +62,19 @@ public class ScheduleController {
     public ResponseEntity cancel(@RequestHeader("Authorization") String authorization, @RequestParam("resourceId") String resourceId,
                                  @RequestParam("date") String date, @RequestParam("time") String time) {
         try {
-            scheduleService.cancelSchedule(getLogin(authorization), resourceId, date, time);
+            scheduleService.cancelSchedule(getId(authorization), resourceId, date, time);
             return ResponseEntity.ok().build();
         } catch (InfraException ie) {
             return ResponseEntity.badRequest().build();
         }
     }
 
-    private String getLogin(String authHeader) {
+    private String getId(String authHeader) {
         if (StringUtil.isBlank(authHeader)) {
             return null;
         }
         String jwt = authHeader.replace("Bearer ", "");
-        return jwtTokenUtil.getLogin(jwt);
+        return jwtTokenUtil.getSubject(jwt);
     }
 
     private SchedulingDTO toDTO(Scheduling scheduling) {
