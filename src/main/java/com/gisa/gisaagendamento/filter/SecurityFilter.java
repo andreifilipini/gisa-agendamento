@@ -32,7 +32,8 @@ public class SecurityFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (this.jwtTokenUtil.verifyContainRole(getJwtToken((HttpServletRequest) request), "ASSOCIADO")) {
+        String jwtToken = getJwtToken((HttpServletRequest) request);
+        if (!this.jwtTokenUtil.isExpired(jwtToken) && this.jwtTokenUtil.verifyContainRole(jwtToken, "ASSOCIADO")) {
             chain.doFilter(request, response);
             response.getOutputStream().println();
         } else {
