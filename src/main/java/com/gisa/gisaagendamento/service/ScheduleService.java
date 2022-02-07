@@ -59,7 +59,7 @@ public class ScheduleService {
 
 	private Scheduling findByAssociateIdAndResourceIdAndDateAndTime(String associateId, String resourceId, String date, String time) {
 		return isNotBlank(resourceId) && isNotBlank(associateId) && isNotBlank(date) && isNotBlank(time)
-				? repository.findByAssociateIdAndResourceIdAndDateAndTime(associateId, resourceId, date, time)
+				? repository.findFirstByAssociateIdAndResourceIdAndDateAndTimeOrderByIdDesc(associateId, resourceId, date, time)
 				: null;
 	}
 

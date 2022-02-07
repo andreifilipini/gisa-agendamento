@@ -9,5 +9,5 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
 
     List<Scheduling> findByAssociateId(String associateId);
 
-    Scheduling findByAssociateIdAndResourceIdAndDateAndTime(String associateId, String resourceId, String date, String time);
+    Scheduling findFirstByAssociateIdAndResourceIdAndDateAndTimeOrderByIdDesc(String associateId, String resourceId, String date, String time);
 }
