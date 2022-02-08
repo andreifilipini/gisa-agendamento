@@ -1,16 +1,14 @@
 package com.gisa.gisaagendamento.controller;
 
-import com.gisa.gisacore.exception.InfraException;
-import com.gisa.gisacore.util.JwtTokenUtil;
-import com.gisa.gisacore.util.StringUtil;
 import com.gisa.gisaagendamento.dto.SchedulingDTO;
 import com.gisa.gisaagendamento.model.Scheduling;
 import com.gisa.gisaagendamento.service.ScheduleService;
-import org.springframework.beans.factory.annotation.Value;
+import com.gisa.gisacore.exception.InfraException;
+import com.gisa.gisacore.util.JwtTokenUtil;
+import com.gisa.gisacore.util.StringUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,18 +20,8 @@ public class ScheduleController {
     @Inject
     private ScheduleService scheduleService;
 
-    @Value("${jwt.secret}")
-    private String secret;
-
-    @Value("${jwt.expiresIn}")
-    private Integer expiresIn;
-
+    @Inject
     private JwtTokenUtil jwtTokenUtil;
-
-    @PostConstruct
-    private void init() {
-        this.jwtTokenUtil = new JwtTokenUtil(secret, expiresIn);
-    }
 
     @GetMapping
     public ResponseEntity<List<SchedulingDTO>> findAll(@RequestHeader("Authorization") String authorization) {
@@ -73,7 +61,7 @@ public class ScheduleController {
         if (StringUtil.isBlank(authHeader)) {
             return null;
         }
-        String jwt = authHeader.replace("Bearer ", "");
+        String jwt = jwtTokenUtil.getJwtToken(authHeader);
         return jwtTokenUtil.getSubject(jwt);
     }
 
